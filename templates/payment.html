@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment for {{ car.name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            padding-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            background: white;
+            display: inline-block;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            text-align: left;
+        }
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Payment for {{ car.name }}</h1>
+    <div class="container">
+        <p><strong>Payment Method:</strong> Mpesa</p>
+        <p><strong>Total Amount:</strong> <span style="color:green;">Ksh {{ total }}</span></p>
+        <br>
+        <form action="{{ url_for('pay', car_id=car.id, total=total) }}" method="POST">
+            <button type="submit">Pay Now</button>
+        </form>
+
+
+    </div>
+</body>
+</html>

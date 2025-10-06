@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Receipt</title>
+    <style>
+        body { font-family: Arial; text-align: center; background-color: #f0f8ff; padding-top: 50px; }
+        .container { background: white; display: inline-block; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        h1 { color: green; }
+        p { font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Payment Successful!</h1>
+        <p><strong>Car:</strong> {{ receipt.car_name }}</p>
+        <p><strong>Amount Paid:</strong> Ksh {{ receipt.amount }}</p>
+        <p><strong>Status:</strong> {{ receipt.status }}</p>
+        <p><strong>Phone Number:</strong> {{ phone }}</p>
+    </div>
+</body>
+</html>

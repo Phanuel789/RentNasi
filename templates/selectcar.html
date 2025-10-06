@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rent {{ car.name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+            background-color: #87CEEB;
+        }
+        img {
+            width: 400px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        input, select, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>You selected: {{ car.name }}</h1>
+    <img src="{{ url_for('static', filename='images/' + car.image) }}" alt="{{ car.name }}">
+    
+    <form method="POST" action="{{ url_for('selectcar', car_id=request.view_args.car_id) }}">
+        <label for="duration">Enter number of days:</label><br>
+        <input type="number" id="duration" name="duration" min="1" required><br>
+
+        <label for="payment_method">Select Payment Method:</label><br>
+        <select id="payment_method" name="payment_method" required>
+            <option value="">--Choose--</option>
+            <option value="Mpesa">Mpesa</option>
+            <option value="Airtel Money">Airtel Money</option>
+        </select><br>
+
+        <button type="submit">Proceed to Payment</button>
+    </form>
+</body>
+</html>
