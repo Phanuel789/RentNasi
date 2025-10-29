@@ -1,51 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Rent {{ car.name }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rent {{ car.name }} | RentNasi</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: url("{{ url_for('static', filename='images/login.jpg') }}") no-repeat center center/cover;
+            background-size: cover;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top:0; left:0;
+            width:100%; height:100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: -1;
+        }
+
+        .container {
+            background-color: rgba(255,255,255,0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
             text-align: center;
-            padding-top: 50px;
-            background-color: #87CEEB;
+            width: 350px;
         }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #1e90ff;
+        }
+
         img {
-            width: 400px;
-            margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
         }
-        input, select, button {
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
             padding: 10px;
             font-size: 16px;
-            margin: 10px 0;
-            border-radius: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
         }
-        button {
-            background-color: #007BFF;
-            color: white;
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 10px;
             border: none;
+            font-weight: bold;
             cursor: pointer;
+            transition: background 0.3s;
+            margin-bottom: 10px;
         }
-        button:hover { background-color: #0056b3; }
+
+        .btn-back {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .btn-back:hover {
+            background-color: #999;
+        }
+
+        .btn-submit {
+            background-color: #1e90ff;
+            color: white;
+        }
+
+        .btn-submit:hover {
+            background-color: #187bcd;
+        }
+
+        @media (max-width: 400px) {
+            .container { width: 90%; padding: 20px; }
+        }
     </style>
 </head>
 <body>
-    <h1>You selected: {{ car.name }}</h1>
-    <img src="{{ url_for('static', filename='images/' + car.image) }}" alt="{{ car.name }}">
-    
-    <form method="POST" action="{{ url_for('selectcar', car_id=request.view_args.car_id) }}">
-        <label for="duration">Enter number of days:</label><br>
-        <input type="number" id="duration" name="duration" min="1" required><br>
+    <div class="container">
+        <h1>You selected: {{ car.name }}</h1>
+        <img src="{{ url_for('static', filename='images/' + car.image) }}" alt="{{ car.name }}">
+        
+        <form method="POST" action="{{ url_for('selectcar', car_id=car.id) }}">
+            <label for="duration">Number of Days</label>
+            <input type="number" id="duration" name="duration" min="1" required>
 
-        <label for="payment_method">Select Payment Method:</label><br>
-        <select id="payment_method" name="payment_method" required>
-            <option value="">--Choose--</option>
-            <option value="Mpesa">Mpesa</option>
-            <option value="Airtel Money">Airtel Money</option>
-        </select><br>
+            <label for="payment_method">Payment Method</label>
+            <select id="payment_method" name="payment_method" required>
+                <option value="">--Choose--</option>
+                <option value="Mpesa">Mpesa</option>
+                <option value="Airtel Money">Airtel Money</option>
+            </select>
 
-        <button type="submit">Proceed to Payment</button>
-    </form>
+            <!-- Go back button -->
+            <button type="button" class="btn btn-back" onclick="window.history.back();">Go Back</button>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-submit">Proceed to Payment</button>
+        </form>
+    </div>
 </body>
 </html>

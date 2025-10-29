@@ -1,52 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Payment for {{ car.name }}</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f8ff;
-            padding-top: 50px;
-        }
-        h1 {
-            color: #333;
-        }
-        .container {
-            background: white;
-            display: inline-block;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            text-align: left;
-        }
-        p {
-            font-size: 18px;
-            margin: 10px 0;
-        }
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover { background-color: #0056b3; }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Payment for {{ car.name }} | RentNasi</title>
+<style>
+  :root{
+    --primary:#1e90ff;
+    --muted:#f6f8fb;
+    --card-radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family: "Segoe UI", Roboto, Lato, sans-serif;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: url("{{ url_for('static', filename='images/login.jpg') }}") center/cover no-repeat;
+    position:relative;
+  }
+  body::before{
+    content:"";
+    position:absolute; inset:0;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px);
+    z-index:0;
+  }
+  .card{
+    position:relative; z-index:1;
+    width:380px; max-width:94%;
+    background:#fff; border-radius:var(--card-radius);
+    padding:22px; box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    text-align:center;
+  }
+  h1{margin:0 0 12px; color:var(--primary)}
+  img{width:100%; height:180px; object-fit:cover; border-radius:10px; margin-bottom:12px}
+  .row{display:flex; justify-content:space-between; margin:8px 0; color:#333}
+  .total{background:var(--muted); padding:12px; border-radius:10px; margin-top:12px; font-weight:700}
+  .small{font-size:13px;color:#666;margin-top:8px}
+
+  .btn{
+    width:100%; padding:12px; border-radius:10px; border:none; cursor:pointer;
+    font-weight:700; margin-top:12px;
+  }
+  .btn-pay{ background:var(--primary); color:#fff }
+  .btn-back{ background:#ccc; color:#222 }
+
+  /* MPESA modal */
+  .mpesa-backdrop{
+    display:none; position:fixed; inset:0; z-index:50;
+    background:rgba(0,0,0,0.6); align-items:center; justify-content:center;
+  }
+  .mpesa{
+    width:320px; max-width:92%; background:#fff; border-radius:12px; padding:18px; text-align:center;
+    box-shadow:0 12px 30px rgba(0,0,0,0.35);
+  }
+  .mpesa h3{margin:0 0 8px; color:var(--primary)}
+  .mpesa p{margin:6px 0; color:#333}
+  .pin{width:80%; padding:10px; font-size:18px; text-align:center; letter-spacing:8px; margin:10px 0; border-radius:8px; border:1px solid #ddd}
+  .muted{color:#666; font-size:13px}
+  .error{color:#c0392b; font-weight:700; margin-top:6px; display:none}
+  @media (max-width:420px){ .card{padding:18px} .mpesa{width:92%} }
+</style>
 </head>
 <body>
+  <div class="card" role="main">
     <h1>Payment for {{ car.name }}</h1>
-    <div class="container">
-        <p><strong>Payment Method:</strong> Mpesa</p>
-        <p><strong>Total Amount:</strong> <span style="color:green;">Ksh {{ total }}</span></p>
-        <br>
-        <form action="{{ url_for('pay', car_id=car.id, total=total) }}" method="POST">
-            <button type="submit">Pay Now</button>
-        </form>
 
+    <img src="{{ url_for('static', filename='images/' + car.image) }}" alt="{{ car.name }}">
 
+    <div class="row"><div>Days</div><div>{{ duration }}{{ ' day' if duration|int==1 else ' days' }}</div></div>
+    <div class="row"><div>Method</div><div>{{ method }}</div></div>
+    <div class="total">Total: Ksh {{ total }}</div>
+
+    <div class="small">Prompt will be sent to:</div>
+    <div style="font-weight:700; margin-top:6px;">{{ phone if phone else 'Enter phone below' }}</div>
+
+    <!-- Optional: allow entering phone if session phone missing -->
+    <form id="paymentFormVisible" onsubmit="return false;">
+      <input type="text" id="phoneInput" name="phone" placeholder="07XXXXXXXX" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; margin-top:12px" value="{{ phone or '' }}" required>
+      <div class="small">You'll receive a simulated MPesa prompt at this number.</div>
+
+      <button type="button" class="btn btn-pay" id="sendPromptBtn">Pay Now (Simulated)</button>
+      <a href="{{ url_for('selectcar', car_id=car.id) }}"><button type="button" class="btn btn-back">Go Back</button></a>
+    </form>
+  </div>
+
+  <!-- MPESA modal -->
+  <div id="mpesaBackdrop" class="mpesa-backdrop" role="dialog" aria-hidden="true">
+    <div class="mpesa" role="document">
+      <h3>MPESA</h3>
+      <p id="sendingText">Sending prompt to <strong id="mpesaPhone">{{ phone or '' }}</strong> …</p>
+
+      <p class="muted">(This is a simulated prompt — enter a 4-digit PIN)</p>
+      <input id="pinInput" class="pin" type="text" inputmode="numeric" maxlength="4" placeholder="••••" />
+      <div id="pinError" class="error">Enter a valid 4-digit PIN</div>
+
+      <button id="confirmBtn" class="btn btn-pay" style="margin-top:10px">OK</button>
+      <button id="cancelBtn" class="btn btn-back" style="margin-top:8px">Cancel</button>
     </div>
+  </div>
+
+<script>
+  const sendBtn = document.getElementById('sendPromptBtn');
+  const mpesaBackdrop = document.getElementById('mpesaBackdrop');
+  const mpesaPhoneEl = document.getElementById('mpesaPhone');
+  const phoneInput = document.getElementById('phoneInput');
+  const pinInput = document.getElementById('pinInput');
+  const pinError = document.getElementById('pinError');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+
+  sendBtn.addEventListener('click', () => {
+    const phone = phoneInput.value.trim();
+    if (!/^0\d{9}$/.test(phone)) { alert('Enter a valid phone (e.g. 0712345678)'); phoneInput.focus(); return; }
+    mpesaPhoneEl.textContent = phone;
+    pinInput.value = '';
+    pinError.style.display = 'none';
+    mpesaBackdrop.style.display = 'flex';
+    mpesaBackdrop.setAttribute('aria-hidden','false');
+    pinInput.focus();
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    mpesaBackdrop.style.display = 'none';
+    mpesaBackdrop.setAttribute('aria-hidden','true');
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    const pin = pinInput.value.trim();
+    if (!/^\d{4}$/.test(pin)) {
+      pinError.style.display = 'block';
+      pinInput.focus();
+      return;
+    }
+    // simulate brief processing
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Processing...';
+
+    setTimeout(() => {
+      // build a small form and submit to your /pay route (POST)
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = "{{ url_for('pay', car_id=car.id, total=total) }}";
+
+      // phone
+      const ip = document.createElement('input'); ip.type='hidden'; ip.name='phone'; ip.value = phoneInput.value.trim(); form.appendChild(ip);
+      // duration
+      const idur = document.createElement('input'); idur.type='hidden'; idur.name='duration'; idur.value = "{{ duration }}"; form.appendChild(idur);
+      // pin (simulated)
+      const ipin = document.createElement('input'); ipin.type='hidden'; ipin.name='sim_pin'; ipin.value = pin; form.appendChild(ipin);
+
+      document.body.appendChild(form);
+      form.submit();
+    }, 900);
+  });
+
+  // allow enter in pin input
+  pinInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); confirmBtn.click(); }
+  });
+</script>
 </body>
 </html>

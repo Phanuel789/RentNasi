@@ -1,61 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Available Cars - RentNasi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: skyblue;
-            text-align: center;
-        }
-        h1 {
-            margin-bottom: 30px;
-            color: #fff;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
-        }
-        .cars-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            justify-items: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Available Cars | RentNasi</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* Blurred background image */
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: url("{{ url_for('static', filename='images/login.jpg') }}") no-repeat center center/cover;
+        filter: blur(6px);
+        z-index: -1;
+    }
+
+    h1 {
+        margin: 40px 0 20px;
+        color: #1e90ff;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    }
+
+    .cars-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        width: 90%;
+        max-width: 1200px;
+        justify-items: center;
+        margin-bottom: 30px;
+    }
+
+    .car-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        width: 250px;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .car-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+
+    .car-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .car-card h3 {
+        margin: 10px 0;
+        font-size: 1.2em;
+        color: #333;
+    }
+
+    .car-card p {
+        color: #555;
+        margin-bottom: 15px;
+    }
+
+    .car-card button {
+        padding: 12px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        background-color: #1e90ff;
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .car-card button:hover {
+        background-color: #187bcd;
+    }
+
+    .back-btn {
+        display: block;
+        width: 200px;
+        text-align: center;
+        margin: 20px auto 40px;
+        padding: 15px;
+        font-size: 16px;
+        border-radius: 10px;
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background 0.3s, transform 0.2s;
+    }
+
+    .back-btn:hover {
+        background-color: #1f7a34;
+        transform: scale(1.03);
+    }
+
+    @media (max-width: 480px) {
         .car-card {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            width: 250px;
+            width: 90%;
         }
-        .car-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        .car-card h3 {
-            margin: 10px 0;
-            font-size: 18px;
-            color: #333;
-        }
-        .car-card button {
-            padding: 10px 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-        }
-        .car-card button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
-    <h1>Available Cars</h1>
+<h1>Available Cars</h1>
+
 <div class="cars-container">
     {% for car in cars %}
     <div class="car-card">
@@ -69,6 +134,7 @@
     {% endfor %}
 </div>
 
-
+<!-- Back to Home button -->
+<a href="{{ url_for('welcome') }}" class="back-btn">HOME</a>
 </body>
 </html>

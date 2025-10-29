@@ -3,53 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>No Users Found | RentNasi</title>
+    <title>Notification | RentNasi</title>
     <style>
         body {
-            background: #f5f6fa;
+            background: url("{{ url_for('static', filename='images/login.jpg') }}") no-repeat center center/cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
+            position: relative;
         }
-        .message-box {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
+
+        .overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.45);
+            backdrop-filter: blur(3px);
+        }
+
+        .notification-box {
+            position: relative;
+            z-index: 1;
+            background: rgba(255,255,255,0.95);
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.4);
             text-align: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            max-width: 350px;
+            max-width: 400px;
         }
+
         h2 {
             color: #ff4d4d;
+            margin-bottom: 20px;
         }
+
+        p {
+            font-size: 1em;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
         button {
+            padding: 12px 25px;
+            font-size: 1em;
             background-color: #1e90ff;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 8px;
             color: white;
-            font-weight: bold;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
-            margin-top: 15px;
+            transition: background 0.3s ease;
         }
+
         button:hover {
             background-color: #187bcd;
         }
     </style>
 </head>
 <body>
-    <div class="message-box">
-        <h2>No Users Found</h2>
-        <p>It looks like there are no user accounts yet. Please create one to continue.</p>
+    <div class="overlay"></div>
+
+    <div class="notification-box">
+        <h2>Oops!</h2>
+        <p>{{ message }}</p>
         <button id="okBtn">OK</button>
     </div>
 
     <script>
         document.getElementById('okBtn').addEventListener('click', function() {
-            window.location.href = "{{ url_for('login') }}";
+            window.location.href = "{{ redirect_url }}";
         });
     </script>
 </body>
