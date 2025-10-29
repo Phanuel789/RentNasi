@@ -44,7 +44,13 @@
     <div class="message-box">
         <h2>No Users Found</h2>
         <p>It looks like there are no user accounts yet. Please create one to continue.</p>
-        <button onclick="window.location.href='{{ url_for('login') }}'">OK</button>
+        <button id="okBtn">OK</button>
     </div>
+
+    <script>
+        document.getElementById('okBtn').addEventListener('click', function() {
+            window.location.href = "{{ url_for('login') }}";
+        });
+    </script>
 </body>
 </html>
