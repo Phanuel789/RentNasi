@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No Users Found | RentNasi</title>
+    <style>
+        body {
+            background: #f5f6fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .message-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            max-width: 350px;
+        }
+        h2 {
+            color: #ff4d4d;
+        }
+        button {
+            background-color: #1e90ff;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #187bcd;
+        }
+    </style>
+</head>
+<body>
+    <div class="message-box">
+        <h2>No Users Found</h2>
+        <p>It looks like there are no user accounts yet. Please create one to continue.</p>
+        <button onclick="window.location.href='{{ url_for('login') }}'">OK</button>
+    </div>
+</body>
+</html>

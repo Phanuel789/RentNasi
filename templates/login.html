@@ -5,80 +5,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RentNasi | Login</title>
     <style>
-     body {
-        background: url("{{ url_for('static', filename='images/login.jpg') }}") no-repeat center center/cover;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
+        body {
+            background: url("{{ url_for('static', filename='images/login.jpg') }}") no-repeat center center/cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
         }
+
         .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.4); /* dark blur */
-        backdrop-filter: blur(3px);
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(3px);
         }
+
         .login-box {
-        position: relative;
-        z-index: 1;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 0 20px rgba(0,0,0,0.3);
-        width: 320px;
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.4);
+            width: 350px;
+            text-align: center;
         }
-        h2 {
-        text-align: center;
-        color: #333;
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            color: #1e90ff;
         }
+
+        p.tagline {
+            color: #555;
+            font-size: 0.9em;
+            margin-bottom: 25px;
+        }
+
         input[type="text"], input[type="password"] {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 1em;
         }
-         button {
-        width: 100%;
-        padding: 10px;
-        background: #1e90ff;
-        border: none;
-        border-radius: 8px;
-        color: white;
-        font-weight: bold;
-        margin-top: 15px;
-        cursor: pointer;
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1e90ff;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1em;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
+
         button:hover {
-        background: #187bcd;
+            background: #187bcd;
         }
+
         .signup {
-        text-align: center;
-        margin-top: 10px;
+            margin-top: 15px;
+            font-size: 0.9em;
         }
+
         .signup a {
-        color: #1e90ff;
-        text-decoration: none;
+            color: #1e90ff;
+            text-decoration: none;
+        }
+
+        .signup a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 15px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 0.85em;
         }
     </style>
 </head>
 <body>
     <div class="overlay"></div>
+
     <div class="login-box">
-        <h2>Login</h2>
+        <h1>RentNasi</h1>
+        <p class="tagline">Your trusted home rental and management partner</p>
+
         <form method="POST">
             <input type="text" name="phone" placeholder="Phone number" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
+
         <div class="signup">
-            <p>Don't have an account? <a href="/register">Sign up</a></p>
+            <p>Don’t have an account? <a href="/register">Sign up</a></p>
         </div>
     </div>
+
+    <footer>
+        &copy; {{ current_year }} RentNasi Ltd — Simplifying Property Rentals in Kenya.
+    </footer>
 </body>
 </html>

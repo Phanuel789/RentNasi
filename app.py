@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -33,12 +33,20 @@ def login():
     if request.method == 'POST':
         phone = request.form['phone']
         password = request.form['password']
-        user = User.query.filter_by(phone=phone).first()
-        if user and check_password_hash(user.password, password):
-            session['user_id'] = user.id
-            return redirect(url_for('welcome'))
-        return "Invalid phone or password"
-    return render_template('login.html')
+
+        # Example check
+        user_exists = False  # Replace this with your real database query
+        if not user_exists:
+            return redirect(url_for('no_users'))
+
+        return "Logged in successfully!"  # replace with dashboard or similar
+
+    return render_template('login.html', current_year=2025)
+
+@app.route('/no_users')
+def no_users():
+    return render_template('no_users.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -53,6 +61,7 @@ def register():
         session['user_id'] = new_user.id
         return redirect(url_for('welcome'))
     return render_template('register.html')
+
 
 @app.route('/welcome')
 def welcome():
