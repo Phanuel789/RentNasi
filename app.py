@@ -9,6 +9,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "your_secret_key_here"
 db = SQLAlchemy(app)
 
+@app.route("/")
+def index():
+    # Optional: redirect to login or welcome page
+    return redirect(url_for("login"))
+
+
 # -----------------------------
 # DATABASE MODELS
 # -----------------------------
